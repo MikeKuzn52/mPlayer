@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/ItemBoard"
+    android:layout_margin="5dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:id="@+id/board">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/folder_icon" />
+
+    <TextView
+        android:id="@+id/folder_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/number_musics"
+        android:layout_toEndOf="@+id/icon"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="2dp"
+        android:text="DirName"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/folder"
+        android:padding="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="10sp"
+        android:text="Dir"
+        android:textColor="#9E000000"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_below="@+id/folder_name"
+        android:layout_toStartOf="@+id/number_musics"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/number_musics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="number"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="10dp"
+
+        android:textColor="@color/black" />
+</RelativeLayout>

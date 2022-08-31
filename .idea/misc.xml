@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.23" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/drawable/folder_icon.xml" value="0.196" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/drawable/ic_copy.xml" value="0.196" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/drawable/ic_launcher_background.xml" value="0.23" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/drawable/ic_next.xml" value="0.23" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/drawable/ic_pause.xml" value="0.23" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/drawable/ic_play.xml" value="0.23" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/drawable/ic_pop_up_menu.xml" value="0.33" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/drawable/ic_previous.xml" value="0.23" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/layout/activity_main - Copy.xml" value="0.22" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/layout/alert_folders.xml" value="0.27239583333333334" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/layout/directorys_irem.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/layout/directorys_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/layout/folder_item.xml" value="0.2796875" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/layout/recyce_irem.xml" value="0.2" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/layout/songs_irem.xml" value="0.33" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/layout/songs_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/kwx1113766/AndroidStudioProjects/mPlayer/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2515" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

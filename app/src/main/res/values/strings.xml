@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">mPlayer</string>
+    <string name="alertFoldersTitle">Select folders</string>
+</resources>

@@ -6,7 +6,7 @@ import com.mikekuzn.mplayer.Domain.Lib;
 import com.mikekuzn.mplayer.Entities.Folders;
 import com.mikekuzn.mplayer.Entities.Songs;
 import com.mikekuzn.mplayer.External.FileScanner;
-import com.mikekuzn.mplayer.External.LoaderIcons;
+import com.mikekuzn.mplayer.External.IconsLoader;
 import com.mikekuzn.mplayer.External.Permission;
 import com.mikekuzn.mplayer.External.Saver;
 
@@ -30,17 +30,17 @@ public class LoadingLogic implements LoadingLogicInter {
     Permission permission;
     Saver saver;
     FileScanner fileScanner;
-    LoaderIcons loaderIcons;
+    IconsLoader iconsLoader;
     CallBack callBack;
     Timer myTimer;
 
-    public LoadingLogic(Songs songs, Folders folders, Permission permission, Saver saver, FileScanner fileScanner, LoaderIcons loaderIcons) {
+    public LoadingLogic(Songs songs, Folders folders, Permission permission, Saver saver, FileScanner fileScanner, IconsLoader iconsLoader) {
         this.songs = songs;
         this.folders = folders;
         this.permission = permission;
         this.saver = saver;
         this.fileScanner = fileScanner;
-        this.loaderIcons = loaderIcons;
+        this.iconsLoader = iconsLoader;
         if (songs.isEmpty()) {
             // Starts loading
             myTimer = new Timer(); // Создаем таймер
@@ -54,8 +54,16 @@ public class LoadingLogic implements LoadingLogicInter {
     }
 
     @Override
-    public void setCallBack(CallBack callBack) {this.callBack = callBack; callBack.execute(bigMessage);}
-    private void runCallBack(String lBigMessage) {bigMessage = lBigMessage; if (callBack != null) callBack.execute(bigMessage);}
+    public void setCallBack(CallBack callBack) {
+        this.callBack = callBack;
+        callBack.execute(bigMessage);
+    }
+
+    private void runCallBack(String lBigMessage) {
+        bigMessage = lBigMessage;
+        if (callBack != null) callBack.execute(bigMessage);
+    }
+
     // **************************************************
     private void execute() {
         switch (state) {
@@ -89,8 +97,8 @@ public class LoadingLogic implements LoadingLogicInter {
                     Log.i("MikeKuzn", "Scan files is ready");
                 }
             case LOAD_ICONS:
-                runCallBack(/*"Cканирование иконок"*/ null);
-                if (loaderIcons.execute()) {
+                runCallBack("Cканирование иконок");
+                if (iconsLoader.execute()) {
                     Log.i("MikeKuzn", "Load Icons is ready");
                     songs.setReady();
                     state = State.SAVING_DATA;
@@ -98,6 +106,7 @@ public class LoadingLogic implements LoadingLogicInter {
                     break;
                 }
             case SAVING_DATA:
+                runCallBack(null);
                 saver.save(songs);
                 state = State.READY;
                 Log.i("MikeKuzn", "Load is ready");
@@ -113,7 +122,7 @@ public class LoadingLogic implements LoadingLogicInter {
             permission = null;
             saver = null;
             fileScanner = null;
-            loaderIcons = null;
+            iconsLoader = null;
         }
     }
 

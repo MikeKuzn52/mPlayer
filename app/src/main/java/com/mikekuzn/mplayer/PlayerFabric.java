@@ -20,7 +20,7 @@ import com.mikekuzn.mplayer.Entities.SongsSortAdapter;
 import com.mikekuzn.mplayer.External.ExchangeInter;
 import com.mikekuzn.mplayer.External.ExchangeWithService;
 import com.mikekuzn.mplayer.External.FileScanner;
-import com.mikekuzn.mplayer.External.LoaderIcons;
+import com.mikekuzn.mplayer.External.IconsLoader;
 import com.mikekuzn.mplayer.External.Permission;
 import com.mikekuzn.mplayer.External.Saver;
 import com.mikekuzn.mplayer.Presenter.ActivityData;
@@ -69,8 +69,8 @@ class FabricModule {
     }
 
     @Provides
-    LoadingLogicInter provideLoadingLogic(Songs songs, Folders folders, Permission permission, Saver saver, FileScanner fileScanner, LoaderIcons loaderIcons) {
-        return new LoadingLogic(songs, folders, permission, saver, fileScanner, loaderIcons);
+    LoadingLogicInter provideLoadingLogic(Songs songs, Folders folders, Permission permission, Saver saver, FileScanner fileScanner, IconsLoader iconsLoader) {
+        return new LoadingLogic(songs, folders, permission, saver, fileScanner, iconsLoader);
     }
 
     @Provides
@@ -118,8 +118,8 @@ class FabricModule {
     }
 
     @Provides
-    LoaderIcons provideLoaderIcons(Songs songs) {
-        return new LoaderIcons(appContext, songs);
+    IconsLoader provideIconsLoader(Songs songs) {
+        return new IconsLoader(appContext, songs);
     }
 
     @Provides

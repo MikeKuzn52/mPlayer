@@ -36,25 +36,20 @@ import dagger.Module;
 import dagger.Provides;
 
 @Singleton
-@Component(modules = {FabricModule.class})
+@Component(modules = {FabricModule.class, FabricLogic.class, FabricEntities.class})
 interface PlayerFabric {
     void inject(MainActivity mainActivity);
 }
 
-@Module(includes = {FabricEntities.class})
+@Module
 class FabricModule {
 
     private final Context appContext;
     private final Activity mainActivity;
-    private StateLogic logic;
-    private PlayerControls playerControls;
-    private FoldersLogicInter foldersLogic;
-    Bitmap defBitmap;
 
     FabricModule(Context appContext, Activity mainActivity) {
         this.appContext = appContext;
         this.mainActivity = mainActivity;
-        defBitmap = BitmapFactory.decodeResource(appContext.getResources(), R.drawable.music_icon);
     }
 
     @Singleton  @Provides
@@ -62,38 +57,13 @@ class FabricModule {
         return new Presenter(logic, playerControls, foldersLogic, moveFileLogic, loadingLogic, activityData);
     }
 
-    @Provides
-    StateLogic provideLogic(ExchangeInter exchange, SongsSortAdapter songsSortAdapter) {
-        logic = new StateLogic(exchange, songsSortAdapter);
-        return logic;
-    }
-
-    @Provides
-    LoadingLogicInter provideLoadingLogic(Songs songs, Folders folders, Permission permission, Saver saver, FileScanner fileScanner, IconsLoader iconsLoader) {
-        return new LoadingLogic(songs, folders, permission, saver, fileScanner, iconsLoader);
-    }
-
-    @Provides
-    FoldersLogicInter provideFoldersLogic(Folders folders, Songs songs, SongsSortAdapter songsSortAdapter, ExchangeInter exchange) {
-        foldersLogic = new FoldersLogic(folders, songs, songsSortAdapter, exchange);
-        return foldersLogic;
-    }
-
-    @Provides
-    PlayerControls providePlayerControls(ExchangeInter exchange) {
-        playerControls = new PlayerControls(exchange);
-        return playerControls;
-    }
-
-    // ???? **** MusicListAdapter на уровне view, Songs на уровне Entities. Связь view->Entities допустима????
     @Singleton @Provides
-    MusicListAdapter provideMusicListAdapter(SongsSortAdapter songs) {
+    MusicListAdapter provideMusicListAdapter(SongsSortAdapter songs, PlayerControls playerControls) {
         return new MusicListAdapter(mainActivity, songs, playerControls.onSongClick);
     }
 
-    // ???? **** Связь view->Entities допустима????
     @Singleton @Provides
-    FolderListAdapter provideFolderListAdapter(Folders folders) {
+    FolderListAdapter provideFolderListAdapter(Folders folders, FoldersLogicInter foldersLogic) {
         return new FolderListAdapter(mainActivity, folders, foldersLogic.getOnFolderClick());
     }
 
@@ -113,9 +83,7 @@ class FabricModule {
     }
 
     @Provides
-    FileScanner provideFileScanner() {
-        return new FileScanner(appContext, defBitmap);
-    }
+    FileScanner provideFileScanner(Bitmap defBitmap) {return new FileScanner(appContext, defBitmap);}
 
     @Provides
     IconsLoader provideIconsLoader(Songs songs) {
@@ -124,6 +92,35 @@ class FabricModule {
 
     @Provides
     MoveFileLogicInter provideMoveFolder(SongsSortAdapter songs){return new MoveFileLogic(mainActivity, songs);}
+
+    @Singleton  @Provides
+    Bitmap provideDefBitmap() {
+        return  BitmapFactory.decodeResource(appContext.getResources(), R.drawable.music_icon);
+    }
+}
+
+@Module
+class FabricLogic {
+
+    @Provides
+    StateLogic provideLogic(ExchangeInter exchange, SongsSortAdapter songsSortAdapter) {
+        return new StateLogic(exchange, songsSortAdapter);
+    }
+
+    @Provides
+    LoadingLogicInter provideLoadingLogic(Songs songs, Folders folders, Permission permission, Saver saver, FileScanner fileScanner, IconsLoader iconsLoader) {
+        return new LoadingLogic(songs, folders, permission, saver, fileScanner, iconsLoader);
+    }
+
+    @Provides
+    FoldersLogicInter provideFoldersLogic(Folders folders, Songs songs, SongsSortAdapter songsSortAdapter, ExchangeInter exchange) {
+        return new FoldersLogic(folders, songs, songsSortAdapter, exchange);
+    }
+
+    @Provides
+    PlayerControls providePlayerControls(ExchangeInter exchange) {
+        return new PlayerControls(exchange);
+    }
 }
 
 @Module

@@ -25,6 +25,7 @@ public class ActivityData {
     }
     // **************************************************
     private final MutableLiveData<String> bigMassage = new MutableLiveData<>();
+    public boolean foldersReady;
     private final MutableLiveData<Boolean> showSongs = new MutableLiveData<>();
     private final MutableLiveData<DataCurrentTime> dataCurrentTime = new MutableLiveData<>();
     private final MutableLiveData<DataCurrentSong> dataCurrentSong = new MutableLiveData<>();
@@ -60,6 +61,11 @@ public class ActivityData {
         }
     }
 
-    void setMsg(String bigMassage) {if (bigMassage != this.bigMassage.getValue())this.bigMassage.postValue(bigMassage);}
+    void setMsg(String bigMassage, boolean foldersReady) {
+        if (bigMassage != this.bigMassage.getValue()) {
+            this.foldersReady = foldersReady;
+            this.bigMassage.postValue(bigMassage);
+        }
+    }
     void setShowSongs(boolean showSongs) {this.showSongs.postValue(showSongs);}
 }

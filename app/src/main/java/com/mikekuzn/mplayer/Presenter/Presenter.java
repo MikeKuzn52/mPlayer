@@ -34,7 +34,7 @@ public class Presenter implements PresenterInter {
         @Override public void execute(boolean showSongs) {activityData.setShowSongs(showSongs);}
     };
     LoadingLogicInter.CallBack loadingResultProc = new LoadingLogicInter.CallBack() {
-        @Override public void execute(String bigMessage) {activityData.setMsg(bigMessage);}
+        @Override public void execute(String bigMessage, boolean foldersReady) {activityData.setMsg(bigMessage, foldersReady);}
     };
     LogicModel.Update updateActivity = new LogicModel.Update() {
         @Override public void execute(LogicModel info) {activityData.Decode(info);}

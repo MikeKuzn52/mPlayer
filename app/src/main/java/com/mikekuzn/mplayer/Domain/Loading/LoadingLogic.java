@@ -24,6 +24,7 @@ public class LoadingLogic implements LoadingLogicInter {
     }
     State state = State.ASK_PERMISSION;
     String bigMessage = "Loading";
+    boolean foldersReady = false;
 
     Songs songs;
     Folders folders;
@@ -56,12 +57,12 @@ public class LoadingLogic implements LoadingLogicInter {
     @Override
     public void setCallBack(CallBack callBack) {
         this.callBack = callBack;
-        callBack.execute(bigMessage);
+        callBack.execute(bigMessage, foldersReady);
     }
 
     private void runCallBack(String lBigMessage) {
         bigMessage = lBigMessage;
-        if (callBack != null) callBack.execute(bigMessage);
+        if (callBack != null) callBack.execute(bigMessage, foldersReady);
     }
 
     // **************************************************
@@ -93,6 +94,7 @@ public class LoadingLogic implements LoadingLogicInter {
                     break;
                 } else {
                     state = State.LOAD_ICONS;
+                    foldersReady = true;
                     FoldersUpdate();
                     Log.i("MikeKuzn", "Scan files is ready");
                 }

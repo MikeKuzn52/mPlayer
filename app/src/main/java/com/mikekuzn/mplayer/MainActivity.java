@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 //Log.i("MikeKuzn", "setMsg " + bigMassage);
                 bigTextMessage.setText(bigMassage);
                 bigTextMessage.setVisibility(bigMassage == null ? View.GONE : View.VISIBLE);
-                if (bigMassage == null) {
+                if (presenter.getActivityData().foldersReady) {
                     //Log.i("MikeKuzn", "notifyDataSetChanged F=" + folderListAdapter.getCount() + " M=" + musicListAdapter.getCount());
                     folderListAdapter.notifyDataSetChanged();
                     musicListAdapter.notifyDataSetChanged();

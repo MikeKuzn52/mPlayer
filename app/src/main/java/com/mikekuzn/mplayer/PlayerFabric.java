@@ -87,7 +87,7 @@ class FabricModule {
 
     @Provides
     IconsLoader provideIconsLoader(Songs songs) {
-        return new IconsLoader(appContext, songs);
+        return new IconsLoader(songs);
     }
 
     @Provides

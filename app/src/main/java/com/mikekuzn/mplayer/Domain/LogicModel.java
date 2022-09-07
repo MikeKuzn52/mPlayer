@@ -13,4 +13,8 @@ public class LogicModel {
     public interface Update {
         void execute(LogicModel info);
     }
+
+    public interface OpenSong{
+        boolean openSong(int numSong, int hash, boolean reStart);
+    }
 }

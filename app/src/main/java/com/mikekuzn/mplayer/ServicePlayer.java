@@ -7,6 +7,8 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.mikekuzn.mplayer.Domain.Lib;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -35,7 +37,9 @@ public class ServicePlayer extends Service {
             int[] r = {mediaPlayer.isPlaying() ? 1 : 0,
                     mediaPlayer.getCurrentPosition()/1000,
                     duration,
-                    numCurrentSong};
+                    numCurrentSong,
+                    Lib.littleHash(songs.get(numCurrentSong))
+            };
             return r;
         }
 

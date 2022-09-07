@@ -10,6 +10,7 @@ import com.mikekuzn.mplayer.Domain.FoldersLogic;
 import com.mikekuzn.mplayer.Domain.FoldersLogicInter;
 import com.mikekuzn.mplayer.Domain.Loading.LoadingLogic;
 import com.mikekuzn.mplayer.Domain.Loading.LoadingLogicInter;
+import com.mikekuzn.mplayer.Domain.LogicModel;
 import com.mikekuzn.mplayer.Domain.MoveFileLogic;
 import com.mikekuzn.mplayer.Domain.MoveFileLogicInter;
 import com.mikekuzn.mplayer.Domain.PlayerControls;
@@ -22,6 +23,7 @@ import com.mikekuzn.mplayer.External.ExchangeWithService;
 import com.mikekuzn.mplayer.External.FileScanner;
 import com.mikekuzn.mplayer.External.IconsLoader;
 import com.mikekuzn.mplayer.External.Permission;
+import com.mikekuzn.mplayer.External.SaveSettings;
 import com.mikekuzn.mplayer.External.Saver;
 import com.mikekuzn.mplayer.Presenter.ActivityData;
 import com.mikekuzn.mplayer.Presenter.FolderListAdapter;
@@ -78,6 +80,11 @@ class FabricModule {
     }
 
     @Provides
+    SaveSettings provideSaveSettings() {
+        return new SaveSettings(appContext);
+    }
+
+    @Provides
     Saver provideSaver() {
         return new Saver(appContext);
     }
@@ -103,8 +110,10 @@ class FabricModule {
 class FabricLogic {
 
     @Provides
-    StateLogic provideLogic(ExchangeInter exchange, SongsSortAdapter songsSortAdapter) {
-        return new StateLogic(exchange, songsSortAdapter);
+    StateLogic provideLogic(ExchangeInter exchange, SongsSortAdapter songsSortAdapter, SaveSettings saveSettings, FoldersLogicInter foldersLogic) {
+        return new StateLogic(exchange, songsSortAdapter, saveSettings, new LogicModel.OpenSong() {
+            @Override public boolean openSong(int numSong, int hash, boolean reStart) {return foldersLogic.openSong(numSong, hash, reStart);}
+        });
     }
 
     @Provides
@@ -112,7 +121,7 @@ class FabricLogic {
         return new LoadingLogic(songs, folders, permission, saver, fileScanner, iconsLoader);
     }
 
-    @Provides
+    @Singleton @Provides
     FoldersLogicInter provideFoldersLogic(Folders folders, Songs songs, SongsSortAdapter songsSortAdapter, ExchangeInter exchange) {
         return new FoldersLogic(folders, songs, songsSortAdapter, exchange);
     }

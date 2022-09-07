@@ -8,4 +8,6 @@ public interface FoldersLogicInter {
     void setCallBack(Lib.callBackBool setShowSongsCallBack);
 
     boolean goToFolders();
+
+    public boolean openSong(int numSong, int hash, boolean reStart);
 }

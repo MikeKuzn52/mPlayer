@@ -1,5 +1,7 @@
 package com.mikekuzn.mplayer.Domain;
 
+import java.nio.charset.StandardCharsets;
+
 public class Lib {
     public interface callBackBool {
         void execute(boolean val);
@@ -19,5 +21,13 @@ public class Lib {
         int ind = path.lastIndexOf('/');
         if (ind == -1) return null;
         return path.substring(ind, path.length());
+    }
+
+    public static int littleHash(String s) {
+        int sum = 0;
+        byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
+        for (byte b: bytes)
+            sum += b;
+        return sum;
     }
 }

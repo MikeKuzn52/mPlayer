@@ -31,17 +31,11 @@ public class FoldersLogic implements FoldersLogicInter {
 
     private final ListAdapter.OnclickRun onFolderClick = new ListAdapter.OnclickRun() {
         @Override
-        public void run(int position) {
-            Log.i("MikeKuzn", "startFolderPlay");
+        public void run(int numFolder) {
             selectedFolders.clear();
-            selectedFolders.add(position);
-            if (setShowSongsBackBool != null) {
-                setEnabledSongs();
-                exchange.transmitList(songsSortAdapter.getPathList());
-                isShowSongs = true;
-                setShowSongsBackBool.execute(true);
-                exchange.transmitCommand(1, 0);
-            }
+            selectedFolders.add(numFolder);
+            setEnabledSongs();
+            applyFolder(0, true);
         }
     };
 
@@ -65,6 +59,18 @@ public class FoldersLogic implements FoldersLogicInter {
         return true;
     }
 
+    void applyFolder(int numSong, boolean reStart) {
+        Log.i("MikeKuzn", "startFolderPlay");
+        if (setShowSongsBackBool != null) {
+            exchange.transmitList(songsSortAdapter.getPathList());
+            isShowSongs = true;
+            setShowSongsBackBool.execute(true);
+            if (reStart) {
+                exchange.transmitCommand(1, numSong);
+            }
+        }
+    }
+
     void setEnabledSongs() {
         songsSortAdapter.clear();
         for (int i = 0; i < songs.fullSize(); i++){
@@ -79,4 +85,32 @@ public class FoldersLogic implements FoldersLogicInter {
         Log.i("MikeKuzn", "setEnabledSongs all-" + songs.size() + " selected-" + songsSortAdapter.size());
     }
 
+    @Override
+    public boolean openSong(int numSong, int hash, boolean reStart) {
+        if (folders.size() == 0) { // (if songs loaded but icons is not loaded, then folders.ready=true and songs.ready=false)
+            // Loading is not ready. Try again
+            Log.i("MikeKuzn", "Loading is not ready. Try again " + songs.size() + " " + songs.fullSize());
+            return false;
+        }
+        for (int nSong = 0;  nSong < songs.fullSize(); nSong++) {
+            if (hash == Lib.littleHash(songs.getPath(nSong))) {
+                String folder = Lib.pathToDirectory(songs.getPath(nSong));
+                for (int numFolder = 0;  numFolder < folders.size(); numFolder++) {
+                    if (folders.equalsFolderPath(numFolder, folder)) {
+                        selectedFolders.clear();
+                        selectedFolders.add(numFolder);
+                        setEnabledSongs();
+                        int songHash = Lib.littleHash(songsSortAdapter.getPath(numSong));
+                        if (songHash == hash) {
+                            Log.i("MikeKuzn", "Apply folder " + numFolder + " and song " + numSong + " hash=" + songHash);
+                            applyFolder(numSong, reStart);
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        return true;
+    }
 }

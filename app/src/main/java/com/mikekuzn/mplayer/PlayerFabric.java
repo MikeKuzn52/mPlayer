@@ -22,6 +22,7 @@ import com.mikekuzn.mplayer.External.ExchangeWithService;
 import com.mikekuzn.mplayer.External.FileScanner;
 import com.mikekuzn.mplayer.External.IconsLoader;
 import com.mikekuzn.mplayer.External.Permission;
+import com.mikekuzn.mplayer.External.SaveSettings;
 import com.mikekuzn.mplayer.External.Saver;
 import com.mikekuzn.mplayer.Presenter.ActivityData;
 import com.mikekuzn.mplayer.Presenter.FolderListAdapter;
@@ -78,6 +79,11 @@ class FabricModule {
     }
 
     @Provides
+    SaveSettings provideSaveSettings() {
+        return new SaveSettings(appContext);
+    }
+
+    @Provides
     Saver provideSaver() {
         return new Saver(appContext);
     }
@@ -103,8 +109,8 @@ class FabricModule {
 class FabricLogic {
 
     @Provides
-    StateLogic provideLogic(ExchangeInter exchange, SongsSortAdapter songsSortAdapter) {
-        return new StateLogic(exchange, songsSortAdapter);
+    StateLogic provideLogic(ExchangeInter exchange, SongsSortAdapter songsSortAdapter, SaveSettings saveSettings, FoldersLogicInter foldersLogic) {
+        return new StateLogic(exchange, songsSortAdapter, saveSettings, foldersLogic::openSong);
     }
 
     @Provides
@@ -112,7 +118,7 @@ class FabricLogic {
         return new LoadingLogic(songs, folders, permission, saver, fileScanner, iconsLoader);
     }
 
-    @Provides
+    @Singleton @Provides
     FoldersLogicInter provideFoldersLogic(Folders folders, Songs songs, SongsSortAdapter songsSortAdapter, ExchangeInter exchange) {
         return new FoldersLogic(folders, songs, songsSortAdapter, exchange);
     }

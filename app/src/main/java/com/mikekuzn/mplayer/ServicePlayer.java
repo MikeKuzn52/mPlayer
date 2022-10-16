@@ -7,6 +7,8 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.mikekuzn.mplayer.Domain.Lib;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -15,7 +17,7 @@ public class ServicePlayer extends Service {
     List<String> songs;
     int numCurrentSong = -1;
     MediaPlayer mediaPlayer = new MediaPlayer();
-    boolean firstStart = false;
+    boolean firstStarted = false;
     boolean repeat = false;     // Settings of repeat after ended list
     int duration = 0;
 
@@ -25,7 +27,7 @@ public class ServicePlayer extends Service {
         @Override
         public int[] getPlayerState() throws RemoteException {
             // If no songs or playing have never started
-            if (songs == null || songs.isEmpty() || !firstStart) {
+            if (songs == null || songs.isEmpty() || !firstStarted) {
                 return new int[]{0, 0, 0, 0};
             }
             if (mediaPlayer.isPlaying()) {
@@ -35,7 +37,9 @@ public class ServicePlayer extends Service {
             int[] r = {mediaPlayer.isPlaying() ? 1 : 0,
                     mediaPlayer.getCurrentPosition()/1000,
                     duration,
-                    numCurrentSong};
+                    numCurrentSong,
+                    Lib.littleHash(songs.get(numCurrentSong))
+            };
             return r;
         }
 
@@ -75,7 +79,10 @@ public class ServicePlayer extends Service {
                         startPlaying(numCurrentSong == songs.size() - 1 ? 0 : numCurrentSong + 1);
                         break;
                     case 4:
-                        if (firstStart) {
+                        mediaPlayer.stop();
+                        break;
+                    case 5:
+                        if (firstStarted) {
                             mediaPlayer.seekTo(second * 1000);
                         }
                         break;
@@ -95,7 +102,7 @@ public class ServicePlayer extends Service {
             mediaPlayer.setDataSource(songs.get(numCurrentSong));
             mediaPlayer.prepare();
             mediaPlayer.start();
-            firstStart = true;
+            firstStarted = true;
 
         } catch (IOException e) {
             e.printStackTrace();

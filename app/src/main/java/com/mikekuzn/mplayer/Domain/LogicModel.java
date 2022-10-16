@@ -15,6 +15,6 @@ public class LogicModel {
     }
 
     public interface OpenSong{
-        boolean openSong(int numSong, int hash, boolean reStart);
+        boolean openSong(int numSong, int hash, boolean reStart, int seek);
     }
 }

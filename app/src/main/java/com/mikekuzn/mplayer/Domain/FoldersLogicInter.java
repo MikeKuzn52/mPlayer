@@ -9,5 +9,5 @@ public interface FoldersLogicInter {
 
     boolean goToFolders();
 
-    public boolean openSong(int numSong, int hash, boolean reStart);
+    public boolean openSong(int numSong, int hash, boolean reStart, int seek);
 }

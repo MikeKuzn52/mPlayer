@@ -54,6 +54,7 @@ public class FoldersLogic implements FoldersLogicInter {
         if (isShowSongs) {
             isShowSongs = false;
             setShowSongsBackBool.execute(false);
+            exchange.transmitCommand(4, 0);
             return false;
         }
         return true;
@@ -86,12 +87,13 @@ public class FoldersLogic implements FoldersLogicInter {
     }
 
     @Override
-    public boolean openSong(int numSong, int hash, boolean reStart) {
+    public boolean openSong(int numSong, int hash, boolean reStart, int seek) {
         if (folders.size() == 0) { // (if songs loaded but icons is not loaded, then folders.ready=true and songs.ready=false)
             // Loading is not ready. Try again
             Log.i("MikeKuzn", "Loading is not ready. Try again " + songs.size() + " " + songs.fullSize());
             return false;
         }
+        // The songs.fullSize() need for don't wait the end of loading songs and icons. Only waiting the end of loading songs
         for (int nSong = 0;  nSong < songs.fullSize(); nSong++) {
             if (hash == Lib.littleHash(songs.getPath(nSong))) {
                 String folder = Lib.pathToDirectory(songs.getPath(nSong));
@@ -102,8 +104,13 @@ public class FoldersLogic implements FoldersLogicInter {
                         setEnabledSongs();
                         int songHash = Lib.littleHash(songsSortAdapter.getPath(numSong));
                         if (songHash == hash) {
-                            Log.i("MikeKuzn", "Apply folder " + numFolder + " and song " + numSong + " hash=" + songHash);
-                            applyFolder(numSong, reStart);
+                            Log.i("MikeKuzn", "Apply folder " + numFolder + " and song " + numSong + " hash=" + songHash + " reStart=" + reStart + " Seek=" + seek);
+                            applyFolder(numSong, true);
+                            exchange.transmitCommand(5, seek);
+                            if (!reStart) {
+                                // press pause.
+                                exchange.transmitCommand(1, -1);
+                            }
                         }
                         break;
                     }

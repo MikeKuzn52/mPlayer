@@ -10,7 +10,6 @@ import com.mikekuzn.mplayer.Domain.FoldersLogic;
 import com.mikekuzn.mplayer.Domain.FoldersLogicInter;
 import com.mikekuzn.mplayer.Domain.Loading.LoadingLogic;
 import com.mikekuzn.mplayer.Domain.Loading.LoadingLogicInter;
-import com.mikekuzn.mplayer.Domain.LogicModel;
 import com.mikekuzn.mplayer.Domain.MoveFileLogic;
 import com.mikekuzn.mplayer.Domain.MoveFileLogicInter;
 import com.mikekuzn.mplayer.Domain.PlayerControls;
@@ -111,9 +110,7 @@ class FabricLogic {
 
     @Provides
     StateLogic provideLogic(ExchangeInter exchange, SongsSortAdapter songsSortAdapter, SaveSettings saveSettings, FoldersLogicInter foldersLogic) {
-        return new StateLogic(exchange, songsSortAdapter, saveSettings, new LogicModel.OpenSong() {
-            @Override public boolean openSong(int numSong, int hash, boolean reStart) {return foldersLogic.openSong(numSong, hash, reStart);}
-        });
+        return new StateLogic(exchange, songsSortAdapter, saveSettings, foldersLogic::openSong);
     }
 
     @Provides

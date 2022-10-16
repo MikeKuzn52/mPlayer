@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 TotalTime.setText(data.sDuration);
                 seekBar.setMax(data.duration);
                 seekBar.setProgress(data.currTime);
-                btnPlay.setImageResource(data.playing ? R.drawable.ic_play : R.drawable.ic_pause);
+                btnPlay.setImageResource(data.playing ? R.drawable.ic_pause : R.drawable.ic_play);
 
             }
         });

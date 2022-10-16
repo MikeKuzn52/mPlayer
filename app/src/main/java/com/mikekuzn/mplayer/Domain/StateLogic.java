@@ -6,7 +6,6 @@ import com.mikekuzn.mplayer.Entities.SongsSortAdapter;
 import com.mikekuzn.mplayer.External.ExchangeInter;
 import com.mikekuzn.mplayer.External.SaveSettings;
 
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,29 +43,33 @@ public class StateLogic {
     private void timer() {
         if (startLoading != StartLoading.READY) {
             int[] numLoadedCurrentSong = saveSettings.loadNumSong();
-            boolean ready = openSong.openSong(numLoadedCurrentSong[0], numLoadedCurrentSong[1], true);
+            // flag ready is need for waiting the end of loading songs
+            boolean ready = openSong.openSong(numLoadedCurrentSong[0], numLoadedCurrentSong[1],
+                    saveSettings.loadPlay(),
+                    saveSettings.loadSeek()
+            );
             if (ready) startLoading = StartLoading.READY;
-//v0 в StateLogic загружать и сохранять номер песни и хэшкод пути к песне.
-//v1 передать в FoldersLogic номер и хэшкод пути песни
-//v2 в FoldersLogic перейти на нужную пепку и запустить нужную композицию
-//3 добавить хэшкод пути песни в службу. и передавать в StateLogic
-//4 если плеер уже проигрывает то пункт 2 с пометкой не запускать мелодию
-//5 в FoldersLogic если выходим из проигрывания песен в меню папок останавливать проигрывание
-//6 сервис должен передать -1 текущей пести и сохранить его
-//7 в логике загрузки готовность songs and folders не дожидаясь загрузки иконок??
-//-1 Сначала нужно решить проблемы с загрузкой
-
         }
         int[] playerState = exchange.getPlayerState();
         if (playerState.length != 5) return;
-        boolean change = activityModel.currTime != playerState[1];
-        activityModel.currTime = playerState[1];
-        activityModel.duration = playerState[2];
-        boolean playing = playerState[0] == 0;
-        change |= activityModel.playing != playing;
-        activityModel.playing = playing;
+        boolean change = false;
+        if (activityModel.currTime != playerState[1]) {
+            change = true;
+            activityModel.currTime = playerState[1];
+            activityModel.duration = playerState[2];
+            saveSettings.saveSeek(activityModel.currTime);
+        }
+
+        boolean playing = playerState[0] != 0;
+        if (activityModel.playing != playing) {
+            change = true;
+            activityModel.playing = playing;
+            saveSettings.savePlay(playing);
+        }
+
         String title = songs.getTitle(activityModel.numCurrentSong);
-        if (activityModel.numCurrentSong != playerState[3] || !Objects.equals(activityModel.currentSongTitle, title)) {
+        if (activityModel.numCurrentSong != playerState[3] ||
+                !activityModel.currentSongTitle.equals(title) ) {
             Log.i("MikeKuzn", "numCurrentSong " + activityModel.numCurrentSong + "->" + playerState[3]);
             activityModel.numCurrentSong = playerState[3];
             Log.i("MikeKuzn", "**** save  " + activityModel.numCurrentSong + " " + Lib.littleHash(songs.getPath(activityModel.numCurrentSong)) + songs.getPath(activityModel.numCurrentSong));

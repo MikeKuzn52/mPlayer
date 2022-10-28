@@ -8,6 +8,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.mikekuzn.mplayer.Domain.Lib;
+import com.mikekuzn.mplayer.External.ExchangeInter.command;
 
 import java.io.IOException;
 import java.util.List;
@@ -51,15 +52,16 @@ public class ServicePlayer extends Service {
 
         @Override
         public void setCommand(int id, int second) throws RemoteException {
-            Log.i("MikeKuzn", "setCommand " + id + " " + second);
+            command ID = command.values()[id];
+            Log.i("MikeKuzn", "setCommand " + ID.toString() + " " + second);
             if (songs == null || songs.isEmpty()) {
                 return;
             }
             if (numCurrentSong == -1 && second == -1) {
                 startPlaying(0);
             } else {
-                switch (id) {
-                    case 1:     // Play pause
+                switch (ID) {
+                    case PLAY:
                         if (second == -1) {
                             if (mediaPlayer.isPlaying()) {
                                 Log.i("MikeKuzn", "pause");
@@ -72,16 +74,16 @@ public class ServicePlayer extends Service {
                             startPlaying(second);
                         }
                         break;
-                    case 2:     // Previous
+                    case PREVIOUS:
                         startPlaying(numCurrentSong == 0 ?songs.size() - 1 : numCurrentSong - 1);
                         break;
-                    case 3:     // Next
+                    case NEXT:
                         startPlaying(numCurrentSong == songs.size() - 1 ? 0 : numCurrentSong + 1);
                         break;
-                    case 4:
+                    case STOP:
                         mediaPlayer.stop();
                         break;
-                    case 5:
+                    case CUR_POS:
                         if (firstStarted) {
                             mediaPlayer.seekTo(second * 1000);
                         }

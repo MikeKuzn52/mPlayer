@@ -4,7 +4,13 @@ import android.util.Pair;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class Folders extends Ready {
+
+    @Inject Folders(){}
 
     public class FolderDescription {
         public String folderPath;

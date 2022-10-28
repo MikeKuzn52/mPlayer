@@ -8,8 +8,9 @@ import com.mikekuzn.mplayer.Entities.SongsSortAdapter;
 import com.mikekuzn.mplayer.External.ExchangeInter;
 import com.mikekuzn.mplayer.Presenter.ListAdapter;
 
-import java.util.ArrayList;
+import com.mikekuzn.mplayer.External.ExchangeInter.command;
 
+import java.util.ArrayList;
 
 public class FoldersLogic implements FoldersLogicInter {
 
@@ -54,7 +55,7 @@ public class FoldersLogic implements FoldersLogicInter {
         if (isShowSongs) {
             isShowSongs = false;
             setShowSongsBackBool.execute(false);
-            exchange.transmitCommand(4, 0);
+            exchange.transmitCommand(command.STOP, 0);
             return false;
         }
         return true;
@@ -67,7 +68,7 @@ public class FoldersLogic implements FoldersLogicInter {
             isShowSongs = true;
             setShowSongsBackBool.execute(true);
             if (reStart) {
-                exchange.transmitCommand(1, numSong);
+                exchange.transmitCommand(command.PLAY, numSong);
             }
         }
     }
@@ -87,7 +88,7 @@ public class FoldersLogic implements FoldersLogicInter {
     }
 
     @Override
-    public boolean openSong(int numSong, int hash, boolean reStart, int seek) {
+    public boolean openSong(int numSong, int hash, boolean reStart, int currentPos) {
         if (folders.size() == 0) { // (if songs loaded but icons is not loaded, then folders.ready=true and songs.ready=false)
             // Loading is not ready. Try again
             Log.i("MikeKuzn", "Loading is not ready. Try again " + songs.size() + " " + songs.fullSize());
@@ -104,12 +105,12 @@ public class FoldersLogic implements FoldersLogicInter {
                         setEnabledSongs();
                         int songHash = Lib.littleHash(songsSortAdapter.getPath(numSong));
                         if (songHash == hash) {
-                            Log.i("MikeKuzn", "Apply folder " + numFolder + " and song " + numSong + " hash=" + songHash + " reStart=" + reStart + " Seek=" + seek);
+                            Log.i("MikeKuzn", "Apply folder " + numFolder + " and song " + numSong + " hash=" + songHash + " reStart=" + reStart + " CurrentPos=" + currentPos);
                             applyFolder(numSong, true);
-                            exchange.transmitCommand(5, seek);
+                            exchange.transmitCommand(command.CUR_POS, currentPos);
                             if (!reStart) {
                                 // press pause.
-                                exchange.transmitCommand(1, -1);
+                                exchange.transmitCommand(command.PLAY, -1);
                             }
                         }
                         break;

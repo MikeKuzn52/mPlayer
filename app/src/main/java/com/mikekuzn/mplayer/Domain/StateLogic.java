@@ -46,7 +46,7 @@ public class StateLogic {
             // flag ready is need for waiting the end of loading songs
             boolean ready = openSong.openSong(numLoadedCurrentSong[0], numLoadedCurrentSong[1],
                     saveSettings.loadPlay(),
-                    saveSettings.loadSeek()
+                    saveSettings.loadCurrentPos()
             );
             if (ready) startLoading = StartLoading.READY;
         }
@@ -57,7 +57,7 @@ public class StateLogic {
             change = true;
             activityModel.currTime = playerState[1];
             activityModel.duration = playerState[2];
-            saveSettings.saveSeek(activityModel.currTime);
+            saveSettings.saveCurrentPos(activityModel.currTime);
         }
 
         boolean playing = playerState[0] != 0;
@@ -69,7 +69,7 @@ public class StateLogic {
 
         String title = songs.getTitle(activityModel.numCurrentSong);
         if (activityModel.numCurrentSong != playerState[3] ||
-                !activityModel.currentSongTitle.equals(title) ) {
+                !title.equals(activityModel.currentSongTitle) ) {
             Log.i("MikeKuzn", "numCurrentSong " + activityModel.numCurrentSong + "->" + playerState[3]);
             activityModel.numCurrentSong = playerState[3];
             Log.i("MikeKuzn", "**** save  " + activityModel.numCurrentSong + " " + Lib.littleHash(songs.getPath(activityModel.numCurrentSong)) + songs.getPath(activityModel.numCurrentSong));

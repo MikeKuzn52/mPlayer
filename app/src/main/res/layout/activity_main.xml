@@ -63,82 +63,11 @@
         android:background="@color/ControlsColor"
         android:padding="5dp">
 
-        <TextView
-            android:id="@+id/CurrentTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/currentSongIcon"
-            android:layout_margin="5dp"
-            android:text="0:00"
-            android:textColor="@color/ControlsButtonsColor" />
-
-        <SeekBar
-            android:id="@+id/seekBar"
+        <fragment
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:name="com.mikekuzn.mplayer.ControlsFragment"/>
 
-            android:layout_alignParentTop="true"
-            android:layout_margin="5dp"
-            android:layout_toStartOf="@+id/TotalTime"
-            android:layout_toEndOf="@+id/CurrentTime"
-            android:background="@color/ControlsColor" />
-
-        <TextView
-            android:id="@+id/TotalTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="5dp"
-            android:text="0:00"
-            android:textColor="@color/ControlsButtonsColor" />
-
-        <ImageView
-            android:id="@+id/currentSongIcon"
-            android:layout_width="@dimen/bigIconSize"
-            android:layout_height="@dimen/bigIconSize"
-            android:src="@drawable/music_icon" />
-
-        <TextView
-            android:id="@+id/currentSongsText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/CurrentTime"
-            android:layout_toStartOf="@+id/btnPrevious"
-            android:layout_toEndOf="@+id/currentSongIcon"
-            android:padding="5dp"
-            android:singleLine="true"
-            android:textColor="@color/ControlsButtonsColor"
-            android:textSize="20sp" />
-
-        <ImageButton
-            android:id="@+id/btnPrevious"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/CurrentTime"
-            android:layout_toStartOf="@+id/btnPlay"
-            android:background="@color/ControlsColor"
-            android:onClick="clickPrevious"
-            android:src="@drawable/ic_previous" />
-
-        <ImageButton
-            android:id="@+id/btnPlay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/CurrentTime"
-            android:layout_toStartOf="@+id/btnNext"
-            android:background="@color/ControlsColor"
-            android:onClick="clickPlay"
-            android:src="@drawable/ic_pause" />
-
-        <ImageButton
-            android:id="@+id/btnNext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/CurrentTime"
-            android:layout_alignParentEnd="true"
-            android:background="@color/ControlsColor"
-            android:onClick="clickNext"
-            android:src="@drawable/ic_next" />
     </RelativeLayout>
 
 </RelativeLayout>

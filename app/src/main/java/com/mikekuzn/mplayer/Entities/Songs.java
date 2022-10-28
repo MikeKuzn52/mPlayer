@@ -6,7 +6,13 @@ import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class Songs extends Ready implements AddNewSong {
+
+    @Inject Songs(){}
 
     public class songDescription {
         public String path;

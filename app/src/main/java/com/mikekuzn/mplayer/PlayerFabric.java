@@ -37,9 +37,10 @@ import dagger.Module;
 import dagger.Provides;
 
 @Singleton
-@Component(modules = {FabricModule.class, FabricLogic.class, FabricEntities.class})
+@Component(modules = {FabricModule.class, FabricLogic.class})
 interface PlayerFabric {
     void inject(MainActivity mainActivity);
+    void inject(ControlsFragment controlsFragment);
 }
 
 @Module
@@ -123,21 +124,4 @@ class FabricLogic {
         return new FoldersLogic(folders, songs, songsSortAdapter, exchange);
     }
 
-    @Provides
-    PlayerControls providePlayerControls(ExchangeInter exchange) {
-        return new PlayerControls(exchange);
-    }
 }
-
-@Module
-class FabricEntities {
-    @Singleton @Provides
-    Folders provideFolders() {return new Folders();}
-
-    @Singleton @Provides
-    Songs provideSongs() {return new Songs();}
-
-    @Singleton @Provides
-    SongsSortAdapter provideSongsSortAdapter() {return new SongsSortAdapter();}
-}
-

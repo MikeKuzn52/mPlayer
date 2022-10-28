@@ -66,10 +66,10 @@ public class ExchangeWithService implements ExchangeInter {
 
 
     @Override
-    public void transmitCommand(int id, int numSong) {
+    public void transmitCommand(command id, int numSong) {
         if (aidlSumService != null) {
             try {
-                aidlSumService.setCommand(id,numSong);
+                aidlSumService.setCommand(id.ordinal(),numSong);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

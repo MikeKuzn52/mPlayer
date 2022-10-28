@@ -9,35 +9,22 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.mikekuzn.mplayer.Domain.Lib;
 import com.mikekuzn.mplayer.Presenter.ActivityData;
 import com.mikekuzn.mplayer.Presenter.FolderListAdapter;
 import com.mikekuzn.mplayer.Presenter.MusicListAdapter;
 import com.mikekuzn.mplayer.Presenter.PresenterInter;
+import com.mikekuzn.mplayer.databinding.ActivityMainBinding;
 
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
-    @Inject
-    PresenterInter presenter;
-    @Inject
-    FolderListAdapter folderListAdapter;
-    @Inject
-    MusicListAdapter musicListAdapter;
+    @Inject PresenterInter presenter;
+    @Inject FolderListAdapter folderListAdapter;
+    @Inject MusicListAdapter musicListAdapter;
     // **************************************************
-    ListView folderList, songList;
-    TextView bigTextMessage, currentSongsText, CurrentTime, TotalTime;
-    SeekBar seekBar;
-    ImageButton btnPlay;
-    ImageView currentSongIcon;
-    RelativeLayout mainLayout, controls, reMove;
-    LinearLayout copy_menu_container;
-    ImageView copy_menu_show_button;
+    ActivityMainBinding binding;
     ImageView[] copyButtons;
     // ****************************************************************************************************
     @Override
@@ -51,30 +38,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("MikeKuzn", "onCreate start");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        findAllById();
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         // **************************************************
         ((PlayerApp)getApplication()).getFabric(this).inject(this);
-        folderList.setAdapter(folderListAdapter);
-        songList.setAdapter(musicListAdapter);
+        binding.foldersList.setAdapter(folderListAdapter);
+        binding.songsList.setAdapter(musicListAdapter);
 
-        // **************************************************
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
-            @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) {
-                    presenter.setCurProgress(seekBar.getProgress());
-                }
-            }
-        });
+        ((PlayerApp)getApplication()).getFabric(this).inject(this);
+        binding.foldersList.setAdapter(folderListAdapter);
+        binding.songsList.setAdapter(musicListAdapter);
         // **************************************************
         presenter.getActivityData().getBigMassage().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String bigMassage) {
                 //Log.i("MikeKuzn", "setMsg " + bigMassage);
-                bigTextMessage.setText(bigMassage);
-                bigTextMessage.setVisibility(bigMassage == null ? View.GONE : View.VISIBLE);
+                binding.bigTextMessage.setText(bigMassage);
+                binding.bigTextMessage.setVisibility(bigMassage == null ? View.GONE : View.VISIBLE);
                 if (presenter.getActivityData().foldersReady) {
                     //Log.i("MikeKuzn", "notifyDataSetChanged F=" + folderListAdapter.getCount() + " M=" + musicListAdapter.getCount());
                     folderListAdapter.notifyDataSetChanged();
@@ -86,36 +66,24 @@ public class MainActivity extends AppCompatActivity {
         presenter.getActivityData().getShowSongs().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean showSongs) {
-                folderList.setVisibility(!showSongs ? View.VISIBLE : View.GONE);
-                controls.setVisibility(showSongs ? View.VISIBLE : View.GONE);
-                reMove.setVisibility(showSongs ? View.VISIBLE : View.GONE);
-                songList.setVisibility(showSongs ? View.VISIBLE : View.GONE);
+                binding.foldersList.setVisibility(!showSongs ? View.VISIBLE : View.GONE);
+                binding.controls.setVisibility(showSongs ? View.VISIBLE : View.GONE);
+                binding.reMove.setVisibility(showSongs ? View.VISIBLE : View.GONE);
+                binding.songsList.setVisibility(showSongs ? View.VISIBLE : View.GONE);
                 if (showSongs) {
                     Log.i("MikeKuzn", "showSongs true");
                     musicListAdapter.notifyDataSetChanged();
                 }
-                controls.invalidate();
+                binding.controls.invalidate();
             }
         });
 
-        presenter.getActivityData().getDataTime().observe(this, new Observer<ActivityData.DataCurrentTime>() {
-            @Override
-            public void onChanged(@Nullable ActivityData.DataCurrentTime data) {
-                CurrentTime.setText(data.sCurrTime);
-                TotalTime.setText(data.sDuration);
-                seekBar.setMax(data.duration);
-                seekBar.setProgress(data.currTime);
-                btnPlay.setImageResource(data.playing ? R.drawable.ic_pause : R.drawable.ic_play);
 
-            }
-        });
-        presenter.getActivityData().getDataSong().observe(this, new Observer<ActivityData.DataCurrentSong>() {
+        presenter.getActivityData().getNumCurrentSong().observe(this, new Observer<ActivityData.NumCurrentSong>() {
             @Override
-            public void onChanged(@Nullable ActivityData.DataCurrentSong data) {
-                currentSongsText.setText(data.currentSongTitle);
-                currentSongIcon.setImageBitmap(data.currentSongBitmap);
+            public void onChanged(@Nullable ActivityData.NumCurrentSong data) {
                 musicListAdapter.setCurrentPosition(data.numCurrentSong);
-                songList.smoothScrollToPosition(data.numCurrentSong);
+                binding.songsList.smoothScrollToPosition(data.numCurrentSong);
             }
         });
 
@@ -131,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             copyButtons[numFolder].setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View view) {presenter.onCopyClick(lNumFolder);}
             });
-            copy_menu_container.addView(copyButtons[numFolder]);
+            binding.copyMenuContainer.addView(copyButtons[numFolder]);
         }
 
         presenter.setMenuShowCallBack(new Lib.callBackBool() {
@@ -141,32 +109,11 @@ public class MainActivity extends AppCompatActivity {
                 for (int numFolder = 0; numFolder < copyButtons.length; numFolder++) {
                     copyButtons[numFolder].setVisibility(showCopyMenu ? View.VISIBLE : View.GONE);
                 }
-                copy_menu_show_button.setImageResource(showCopyMenu ? R.drawable.pop_up_menu_down : R.drawable.pop_up_menu_up);
+                binding.copyMenuShowButton.setImageResource(showCopyMenu ? R.drawable.pop_up_menu_down : R.drawable.pop_up_menu_up);
             }
         });
     }
     // ****************************************************************************************************
-    public void clickPlay(View view) {presenter.play();}
-    public void clickPrevious(View view) { presenter.previous();}
-    public void clickNext(View view) {presenter.next();}
-    // ****************************************************************************************************
-    void findAllById(){
-        folderList = findViewById(R.id.foldersList);
-        songList = findViewById(R.id.songsList);
-        bigTextMessage = findViewById(R.id.bigTextMessage);
-        CurrentTime = findViewById(R.id.CurrentTime);
-        TotalTime = findViewById(R.id.TotalTime);
-        seekBar = findViewById(R.id.seekBar);
-        btnPlay = findViewById(R.id.btnPlay);
-        currentSongsText = findViewById(R.id.currentSongsText);
-        currentSongIcon = findViewById(R.id.currentSongIcon);
-        controls = findViewById(R.id.controls);
-        reMove = findViewById(R.id.reMove);
-        mainLayout = findViewById(R.id.mainLayout);
-        copy_menu_container = findViewById(R.id.copy_menu_container);
-        copy_menu_show_button = findViewById(R.id.copy_menu_show_button);
-    }
-
     public void clickShowCopyMenu(View view) {
         presenter.setShowCopyMenu();
     }
